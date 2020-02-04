@@ -13,7 +13,7 @@ url2 = requests.get('https://www.cricketcountry.com/players/', headers=agent).te
 
 scr2 = bs(url2, 'lxml')
 
-icc_file = pd.read_csv('icc-odi.csv')
+# icc_file = pd.read_csv('icc-odi.csv')
 
 
 # all player scraping
@@ -34,6 +34,9 @@ for i in player_link:
 
 # print(odi == [])
 
+icc = []
+
+col = ['Name', 'Date of birth', 'Team', 'Batting Style', 'Bowling Style', 'ODI Debut', 'Debut Team', 'ODIs matach', 'Matches played', 'Innings', 'Total Run', 'Not Out', 'Highe Score', 'Average', 'Balls faced', 'Stick rate', '100s', '50s', '4s', '6s', 'Ct', 'St', 'ODIs matach 2', 'Matches played 2','B', 'R', 'Wickets', 'Avg', 'EC', 'SR', '5WI', '10WM', 'BBI', 'BBM']
 
 #playre profile
 for i in a:
@@ -96,8 +99,13 @@ for i in a:
 
         full_list = list(itertools.chain(*full_list))
 
-        print(full_list)
+        icc.append(full_list)
     
 
+df = pd.DataFrame(icc, columns = col)
 
+df = df.drop(['ODIs matach','ODIs matach 2', 'Matches played 2'], axis=1)
 
+df.to_csv('icc-player.csv', index=False)
+
+print('done!')
