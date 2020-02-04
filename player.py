@@ -97,7 +97,7 @@ for i in a:
 
         match_date = frist_match[-2].strip()+ ',' +frist_match[-1].strip()
 
-        frist_team = frist_match[0].split(' v')[0]
+        frist_team = frist_match[0].split(' at')[0]
 
         full_list = [[name, dob, team, batting_style, bowling_style, match_date, frist_team], batting_list, bowling_list]
 
@@ -123,13 +123,11 @@ df = pd.DataFrame(icc, columns = col)
 
 df.drop(['ODIs matach','ODIs matach 2', 'Matches played 2'], axis=1, inplace = True)
 
-df.to_csv('ind-player.csv', index=False)
+df.to_csv('icc/ind-player.csv', index=False)
 
 df2 = pd.DataFrame(exclue_list, columns = ['Name' , 'Link'])
 
-df2.to_csv('ind-player-exc.csv', index=False)
+df2.to_csv('icc/ind-player-exc.csv', index=False)
 
-
-print(exclue_list[0])
 
 print('done!')
