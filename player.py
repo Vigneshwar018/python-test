@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup as bs
 import requests
-import re 
+import itertools
+import pandas as pd
+# import re 
 
 # url = requests.get('https://webscraper.io/test-sites/e-commerce/allinone').text
 
@@ -9,8 +11,9 @@ agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWeb
 
 url2 = requests.get('https://www.cricketcountry.com/players/', headers=agent).text
 
-
 scr2 = bs(url2, 'lxml')
+
+icc_file = pd.read_csv('icc-odi.csv')
 
 
 # all player scraping
@@ -58,7 +61,7 @@ for i in a:
             bowling_style = scr.select_one('div > aside > section:nth-of-type(6)> aside:nth-of-type(2)').get_text().strip()
         except AttributeError as e:
             
-            bowling_style = None
+            bowling_style = 'NaN'
 
         odi_batting = scr.select_one('tr:nth-of-type(2)').get_text()
 
@@ -85,11 +88,15 @@ for i in a:
 
         frist_match = str(frist_match).split(',')
 
-        match_date = frist_match[-2]+ ',' +frist_match[-1]
+        match_date = frist_match[-2].strip()+ ',' +frist_match[-1].strip()
 
         frist_team = frist_match[0].split(' v')[0]
 
-        print([name, dob, team, batting_style, bowling_style, match_date, frist_team, batting_list, bowling_list])
+        full_list = [[name, dob, team, batting_style, bowling_style, match_date, frist_team], batting_list, bowling_list]
+
+        full_list = list(itertools.chain(*full_list))
+
+        print(full_list)
     
 
 
