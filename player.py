@@ -18,7 +18,7 @@ scr2 = bs(url2, 'lxml')
 
 # all player scraping
 
-player_link = scr2.select('#tabcontent_796 > div > ul > li:nth-of-type(1) > a[href^="https://www.cricketcountry.com/players/"]')
+player_link = scr2.select('#tabcontent_796 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
 
 a =[]
 for i in player_link:
@@ -37,6 +37,10 @@ for i in player_link:
 icc = []
 
 col = ['Name', 'Date of birth', 'Team', 'Batting Style', 'Bowling Style', 'ODI Debut', 'Debut Team', 'ODIs matach', 'Matches played', 'Innings', 'Total Run', 'Not Out', 'Highe Score', 'Average', 'Balls faced', 'Stick rate', '100s', '50s', '4s', '6s', 'Ct', 'St', 'ODIs matach 2', 'Matches played 2','B', 'R', 'Wickets', 'Avg', 'EC', 'SR', '5WI', '10WM', 'BBI', 'BBM']
+
+exclue_list = []
+
+v = 1
 
 #playre profile
 for i in a:
@@ -100,12 +104,32 @@ for i in a:
         full_list = list(itertools.chain(*full_list))
 
         icc.append(full_list)
+
+        v += 1
+
+        print(v)
+
+    else:
+        name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
+        exclue_list.append([name,i])
+        v += 1
+
+        print(v)
+
+
     
 
 df = pd.DataFrame(icc, columns = col)
 
-df = df.drop(['ODIs matach','ODIs matach 2', 'Matches played 2'], axis=1)
+df.drop(['ODIs matach','ODIs matach 2', 'Matches played 2'], axis=1, inplace = True)
 
-df.to_csv('icc-player.csv', index=False)
+df.to_csv('ind-player.csv', index=False)
+
+df2 = pd.DataFrame(exclue_list, columns = ['Name' , 'Link'])
+
+df2.to_csv('ind-player-exc.csv', index=False)
+
+
+print(exclue_list[0])
 
 print('done!')
