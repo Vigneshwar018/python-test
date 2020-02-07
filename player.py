@@ -18,7 +18,7 @@ scr2 = bs(url2, 'lxml')
 
 # all player scraping
 
-player_link = scr2.select('#tabcontent_796 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
+player_link = scr2.select('#tabcontent_992 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
 
 a =[]
 for i in player_link:
@@ -48,16 +48,23 @@ for i in a:
 
     scr = bs(url, 'lxml')
 
-    odi = scr.select('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(2)')
+    odi = scr.select('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(1)')
 
-    if odi != [] :
+    deb = scr.select_one('section.stat > div > aside:nth-child(1) > p.col-xs-12.col-sm-2').text
+
+    if deb == 'ODI Debut':
+        d = 1
+    else:
+        d = 2
+        
+
+    if odi == 'ODI Debut' or deb == 'ODI Debut':
         name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
-
-        # name = name.strip()
-
+        
         dob = scr.find(itemprop="birthDate").get_text().strip()
 
         team = scr.select_one('div > aside > section:nth-of-type(4)> aside > a').get_text().upper().strip()
+           
         try:
             batting_style = scr.select_one('div > aside > section:nth-of-type(5)> aside:nth-of-type(2)').get_text().strip()
         except AttributeError as e:
@@ -90,7 +97,7 @@ for i in a:
 
         bowling_list = [i for i in bowling_list if i]
 
-        frist_match = scr.select('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(2)')[0].get_text()
+        frist_match = scr.select(f'div:nth-of-type({d}) > aside:nth-of-type(1) > p:nth-of-type(2)')[0].get_text()
 
 
         frist_match = str(frist_match).split(',')
@@ -104,13 +111,11 @@ for i in a:
         full_list = list(itertools.chain(*full_list))
 
         icc.append(full_list)
-
+        
         v += 1
 
         print(v)
-
-        
-
+    
     else:
         name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
         exclue_list.append([name,i])
