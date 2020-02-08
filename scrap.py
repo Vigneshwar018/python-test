@@ -1,31 +1,25 @@
 from bs4 import BeautifulSoup as bs
 import requests
 
-# url = requests.get('https://webscraper.io/test-sites/e-commerce/allinone').text
 
 agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
-url = requests.get('https://www.zomato.com/chennai/hotel-city-park-1-porur/order', headers=agent).text
 
-
-# url2 = requests.get('https://www.amazon.in/dp/B07HGMQX6N?pf_rd_p=fa25496c-7d42-4f20-a958-cce32020b23e&pf_rd_r=35W3QDYGFHDVK1D4QZWD').text
+url = requests.get('https://www.cricketcountry.com/players/harbhajan-singh/', headers=agent).text
 
 scr = bs(url, 'lxml')
 
+deb = scr.select_one('div:nth-of-type(4) > aside:nth-of-type(1) > p:nth-of-type(1)')
 
-for pro in scr.find_all(class_="thumbnail"):
+# deb = scr.select_one('section.stat > div > aside:nth-child(1) > p.col-xs-12.col-sm-2').text
 
-    pros = pro.find(class_="title")
 
-    print(pros.text)
-    
-    dis = pro.find(class_="description")
+# a = 1
+# b = 1
 
-    print(dis.text)
+# if a == 1 or b == 0:
+#     print('done')
+# else:
+#     print('fail')
 
-    price = pro.find(class_="pull-right price")
-
-    print(price.text)
-
-# print(scr)
-
+print(deb == None)

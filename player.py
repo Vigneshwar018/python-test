@@ -48,7 +48,10 @@ for i in a:
 
     scr = bs(url, 'lxml')
 
-    odi = scr.select('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(1)')
+    try:
+        odi = scr.select_one('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(1)').text
+    except AttributeError as e:
+        odi = 'test'
 
     deb = scr.select_one('section.stat > div > aside:nth-child(1) > p.col-xs-12.col-sm-2').text
 
@@ -58,7 +61,7 @@ for i in a:
         d = 2
         
 
-    if odi == 'ODI Debut' or deb == 'ODI Debut':
+    if deb == 'ODI Debut' or odi == 'ODI Debut':
         name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
         
         dob = scr.find(itemprop="birthDate").get_text().strip()
