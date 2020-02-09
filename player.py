@@ -18,7 +18,7 @@ scr2 = bs(url2, 'lxml')
 
 # all player scraping
 
-player_link = scr2.select('#tabcontent_992 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
+player_link = scr2.select('#tabcontent_796 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
 
 a =[]
 for i in player_link:
@@ -52,10 +52,13 @@ for i in a:
         odi = scr.select_one('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(1)').text
     except AttributeError as e:
         odi = 'test'
-
-    deb = scr.select_one('section.stat > div > aside:nth-child(1) > p.col-xs-12.col-sm-2').text
-
+    try:
+    	deb = scr.select_one('section.stat > div > aside:nth-child(1) > p.col-xs-12.col-sm-2').text
+    except AttributeError as e:
+        deb = 'test'
+        
     if deb == 'ODI Debut':
+    	
         d = 1
     else:
         d = 2
