@@ -15,14 +15,19 @@ scr2 = bs(url2, 'lxml')
 
 # icc_file = pd.read_csv('icc-odi.csv')
 
-
 # all player scraping
 
-player_link = scr2.select('#tabcontent_796 > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
+link_team = { 'ind':'796', 'nz':'992', 'sa':'1235', 'eng':'681', 'aus':'20', 'pak': '263', 'sl':'320', 'wi':'1356' ,'ban':'523', 'zim':'407', 'nel':'426', 'uae':'365', 'sct':'312', 'ire':'156' , 'hk':'145', 'afg':'1589' }
+
+
+player_link = scr2.select(f'#tabcontent_{link_team["uae"]} > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
 
 a =[]
 for i in player_link:
     b = i.get_attribute_list('href')
+ #   if 'https://www.cricketcountry.com/players/kamran-shazad/' == b[0] or 'https://www.cricketcountry.com/players/naeemuddin-aslam/' == b[0] :
+    #	pass
+#    else:	
     a.append(b[0])
 
 # url = requests.get('https://www.cricketcountry.com/players/datta-gaekwad/', headers=agent).text
@@ -39,12 +44,12 @@ icc = []
 col = ['Name', 'Date of birth', 'Team', 'Batting Style', 'Bowling Style', 'ODI Debut', 'Debut Team', 'ODIs matach', 'Matches played', 'Innings', 'Total Run', 'Not Out', 'Highe Score', 'Batting Avg', 'Balls faced', 'Stick rate', '100s', '50s', '4s', '6s', 'Caught', 'Stumped', 'ODIs matach 2', 'Matches played 2','Balls', 'Runs', 'Wickets', 'Bowling Avg', 'Economy', 'Stick rate', '5WI', '10WM', 'BBI', 'BBM']
 
 exclue_list = []
-
+#lol = [1,2]
 v = 0
 
 #playre profile
 for i in a:
-    url = requests.get(i, headers=agent).text
+    url = requests.get(i , headers=agent).text
 
     scr = bs(url, 'lxml')
 
@@ -62,12 +67,16 @@ for i in a:
         d = 1
     else:
         d = 2
-        
+     
+    try:
+        dob = scr.find(itemprop="birthDate").get_text().strip()
+    except AttributeError as e:
+        dob = None       
 
-    if deb == 'ODI Debut' or odi == 'ODI Debut':
+    if (deb == 'ODI Debut' or odi == 'ODI Debut') and (dob != None):
         name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
         
-        dob = scr.find(itemprop="birthDate").get_text().strip()
+        	
 
         team = scr.select_one('div > aside > section:nth-of-type(4)> aside > a').get_text().upper().strip()
            
@@ -120,14 +129,15 @@ for i in a:
         
         v += 1
 
-        print(v)
+        print(v, name)
     
     else:
         name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
         exclue_list.append([name,i])
         v += 1
+       # team = 'lol'
 
-        print(v)
+        print(v,i)
 
 
     
