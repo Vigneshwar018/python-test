@@ -19,16 +19,17 @@ scr2 = bs(url2, 'lxml')
 
 link_team = { 'ind':'796', 'nz':'992', 'sa':'1235', 'eng':'681', 'aus':'20', 'pak': '263', 'sl':'320', 'wi':'1356' ,'ban':'523', 'zim':'407', 'nel':'426', 'uae':'365', 'sct':'312', 'ire':'156' , 'hk':'145', 'afg':'1589' }
 
+test_player =  pd.read_csv('icc/exc/exc_all_player.csv')
 
-player_link = scr2.select(f'#tabcontent_{link_team["uae"]} > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
+player_link = scr2.select(f'#tabcontent_{link_team["nz"]} > div > ul > li > a[href^="https://www.cricketcountry.com/players/"]')
 
 a =[]
 for i in player_link:
     b = i.get_attribute_list('href')
- #   if 'https://www.cricketcountry.com/players/kamran-shazad/' == b[0] or 'https://www.cricketcountry.com/players/naeemuddin-aslam/' == b[0] :
-    #	pass
-#    else:	
-    a.append(b[0])
+    if b[0] in test_player['Link'].values:
+    	pass
+    else:	
+    	a.append(b[0])
 
 # url = requests.get('https://www.cricketcountry.com/players/datta-gaekwad/', headers=agent).text
 
@@ -38,7 +39,7 @@ for i in player_link:
 # odi = scr.select('div:nth-of-type(2) > aside:nth-of-type(1) > p:nth-of-type(2)')
 
 # print(odi == [])
-
+print (len(a))
 icc = []
 
 col = ['Name', 'Date of birth', 'Team', 'Batting Style', 'Bowling Style', 'ODI Debut', 'Debut Team', 'ODIs matach', 'Matches played', 'Innings', 'Total Run', 'Not Out', 'Highe Score', 'Batting Avg', 'Balls faced', 'Stick rate', '100s', '50s', '4s', '6s', 'Caught', 'Stumped', 'ODIs matach 2', 'Matches played 2','Balls', 'Runs', 'Wickets', 'Bowling Avg', 'Economy', 'Stick rate', '5WI', '10WM', 'BBI', 'BBM']
@@ -46,7 +47,8 @@ col = ['Name', 'Date of birth', 'Team', 'Batting Style', 'Bowling Style', 'ODI D
 exclue_list = []
 #lol = [1,2]
 v = 0
-
+s = 0
+en = 150
 #playre profile
 for i in a:
     url = requests.get(i , headers=agent).text
@@ -132,16 +134,14 @@ for i in a:
         print(v, name)
     
     else:
-        name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
-        exclue_list.append([name,i])
-        v += 1
-       # team = 'lol'
-
-        print(v,i)
-
-
-    
-
+    	try:
+    		name = scr.find(class_="ply-info-dis", itemprop="name").get_text().strip()
+    	except AttributeError:
+    		name = None
+    	exclue_list.append([name,i])
+    	v += 1
+    	#team = 'lol'
+    	print(v,i)
 df = pd.DataFrame(icc, columns = col)
 
 df.drop(['ODIs matach','ODIs matach 2', 'Matches played 2'], axis=1, inplace = True)
