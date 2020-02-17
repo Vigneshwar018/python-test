@@ -30,6 +30,7 @@ li =[]
 
 for f in fl:
 	df = pd.read_csv(f)
+	df['Team'] = df['Team'][0]
 	li.append(df)
 
 excfl = pd.concat(li, ignore_index=True)
