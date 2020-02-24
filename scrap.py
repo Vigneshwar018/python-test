@@ -35,4 +35,4 @@ for f in fl:
 
 excfl = pd.concat(li, ignore_index=True)
 
-excfl.to_csv('icc/all_player.csv', index=False)
+excfl.to_csv('all_player.csv', index=False)
