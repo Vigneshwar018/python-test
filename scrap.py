@@ -11,7 +11,7 @@ h = 0
 
 dic = []
 col = ['category', 'type', 'difficulty', 'question', 'correct_answer', 'in1', 'in2', 'in3' ] 
-while h <= 75:
+while h <= 150:
     url = requests.get('https://opentdb.com/api.php?amount=50', headers=agent).text
     
     scr = bs(url, 'lxml')
